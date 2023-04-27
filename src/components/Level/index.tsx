@@ -13,7 +13,7 @@ import Animated, {
 
 // useSharedValue: they are used inside useAnimatedStyle. If they change, the useAnimatedStyle will react to this
 // useAnimatedStyle: is reactive to useSharedValue
-// withSpring and withSpring defines the types of animations, they have a durantion prop and we can import the Easing from reanimated to redefine the kind of animation
+// withSpring and withTiming defines the types of animations, they have a durantion prop and we can import the Easing from reanimated to redefine the kind of animation
 
 /* 
   COLOR INTERPOLATE
