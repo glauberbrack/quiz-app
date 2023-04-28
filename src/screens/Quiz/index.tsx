@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { Alert, ScrollView, Text, View, Platform } from "react-native";
+import { Alert, Text, View } from "react-native";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
 
 import { useNavigation, useRoute } from "@react-navigation/native";
 
@@ -12,6 +13,7 @@ import Animated, {
   Easing,
   useAnimatedScrollHandler,
   Extrapolate,
+  runOnJS,
 } from "react-native-reanimated";
 
 import { styles } from "./styles";
@@ -33,6 +35,9 @@ interface Params {
 
 type QuizProps = (typeof QUIZ)[0];
 
+const QUESTION_CARD_INCLINATION = 10;
+const QUESTION_SKIP_AREA = -200;
+
 export function Quiz() {
   const [points, setPoints] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -44,6 +49,7 @@ export function Quiz() {
 
   const shake = useSharedValue(0);
   const scrollScreenY = useSharedValue(0);
+  const cardPosition = useSharedValue(0);
 
   const shakeAnimation = () => {
     shake.value = withSequence(
@@ -175,6 +181,35 @@ export function Quiz() {
     };
   });
 
+  const onLongPress = Gesture.LongPress()
+    .minDuration(200)
+    .onStart(() => {
+      console.log("Long press just to show how Gesture.Simultaneous work");
+    });
+
+  const handlePanGesture = Gesture.Pan()
+    .activateAfterLongPress(100)
+    .onUpdate((event) => {
+      const isMovingLeft = event.translationX < 0;
+      if (isMovingLeft) cardPosition.value = event.translationX;
+    })
+    .onEnd((event) => {
+      cardPosition.value = withTiming(0);
+      if (event.translationX < QUESTION_SKIP_AREA) {
+        runOnJS(handleSkipConfirm)();
+      }
+    });
+
+  const dragStyles = useAnimatedStyle(() => {
+    const rotateZ = cardPosition.value / QUESTION_CARD_INCLINATION;
+    return {
+      transform: [
+        { translateX: cardPosition.value },
+        { rotateZ: `${rotateZ}deg` },
+      ],
+    };
+  });
+
   useEffect(() => {
     const quizSelected = QUIZ.filter((item) => item.id === id)[0];
     setQuiz(quizSelected);
@@ -210,14 +245,18 @@ export function Quiz() {
           />
         </Animated.View>
 
-        <Animated.View style={shakeStyleAnimated}>
-          <Question
-            key={quiz.questions[currentQuestion].title}
-            question={quiz.questions[currentQuestion]}
-            alternativeSelected={alternativeSelected}
-            setAlternativeSelected={setAlternativeSelected}
-          />
-        </Animated.View>
+        <GestureDetector
+          gesture={Gesture.Simultaneous(handlePanGesture, onLongPress)}
+        >
+          <Animated.View style={[shakeStyleAnimated, dragStyles]}>
+            <Question
+              key={quiz.questions[currentQuestion].title}
+              question={quiz.questions[currentQuestion]}
+              alternativeSelected={alternativeSelected}
+              setAlternativeSelected={setAlternativeSelected}
+            />
+          </Animated.View>
+        </GestureDetector>
         <View style={styles.footer}>
           <OutlineButton title="Parar" onPress={handleStop} />
           <ConfirmButton onPress={handleConfirm} />
