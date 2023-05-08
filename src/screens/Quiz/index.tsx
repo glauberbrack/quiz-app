@@ -27,6 +27,7 @@ import { QuizHeader } from "../../components/QuizHeader";
 import { ConfirmButton } from "../../components/ConfirmButton";
 import { OutlineButton } from "../../components/OutlineButton";
 import { ProgressBar } from "../../components/ProgressBar";
+import { OverlayFeedback } from "../../components/OverlayFeedback";
 import { THEME } from "../../styles/theme";
 
 interface Params {
@@ -46,6 +47,8 @@ export function Quiz() {
   const [alternativeSelected, setAlternativeSelected] = useState<null | number>(
     null
   );
+
+  const [statusReply, setStatusReply] = useState(0);
 
   const shake = useSharedValue(0);
   const scrollScreenY = useSharedValue(0);
@@ -79,7 +82,7 @@ export function Quiz() {
 
   function handleSkipConfirm() {
     Alert.alert("Pular", "Deseja realmente pular a questão?", [
-      { text: "Sim", onPress: () => handleNextQuestion() },
+      { text: "Sim", onPress: () => {} },
       { text: "Não", onPress: () => {} },
     ]);
   }
@@ -113,10 +116,12 @@ export function Quiz() {
     }
 
     if (quiz.questions[currentQuestion].correct === alternativeSelected) {
+      setStatusReply(1);
       setPoints((prevState) => prevState + 1);
       setAlternativeSelected(null);
       handleNextQuestion();
     } else {
+      setStatusReply(2);
       shakeAnimation();
     }
   }
@@ -222,6 +227,7 @@ export function Quiz() {
 
   return (
     <View style={styles.container}>
+      <OverlayFeedback status={statusReply} />
       <Animated.View style={fixedProgressBarStyles}>
         <Text style={styles.headerTitle}>{quiz.title}</Text>
 
