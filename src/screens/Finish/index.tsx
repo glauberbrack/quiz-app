@@ -21,14 +21,14 @@ export function Finish() {
     <View style={styles.container}>
       <Stars />
       <View style={styles.message}>
-        <Text style={styles.title}>Parabéns!</Text>
+        <Text style={styles.title}>Awesomeeee!</Text>
 
         <Text style={styles.subtitle}>
-          Você acertou {points} de {total} questões
+          You got {points} out of {total} right
         </Text>
       </View>
 
-      <Button title="Ir para o início" onPress={() => navigate("home")} />
+      <Button title="Go to Home" onPress={() => navigate("home")} />
     </View>
   );
 }

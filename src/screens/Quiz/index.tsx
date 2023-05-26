@@ -147,13 +147,13 @@ export function Quiz() {
   }
 
   function handleStop() {
-    Alert.alert("Parar", "Deseja parar agora?", [
+    Alert.alert("Stop", "Do you want to quit right now?", [
       {
-        text: "Não",
+        text: "No",
         style: "cancel",
       },
       {
-        text: "Sim",
+        text: "Yes",
         style: "destructive",
         onPress: () => navigate("home"),
       },
@@ -296,7 +296,7 @@ export function Quiz() {
           </Animated.View>
         </GestureDetector>
         <View style={styles.footer}>
-          <OutlineButton title="Parar" onPress={handleStop} />
+          <OutlineButton title="Stop" onPress={handleStop} />
           <ConfirmButton onPress={handleConfirm} />
         </View>
       </Animated.ScrollView>

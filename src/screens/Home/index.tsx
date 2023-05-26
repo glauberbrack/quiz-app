@@ -36,26 +36,26 @@ export function Home() {
     <View style={styles.container}>
       <Header
         icon={Trophy}
-        title="Vamos estudar"
-        subtitle="Treine seus conhecimento"
+        title="Let's start!"
+        subtitle="Train you knowlegde"
         onPress={() => navigate("history")}
       />
 
       <View style={styles.levels}>
         <Level
-          title="Fácil"
+          title="Easy"
           type="EASY"
           onPress={() => handleLevelFilter(1)}
           isChecked={levels.includes(1)}
         />
         <Level
-          title="Médio"
+          title="Medium"
           type="MEDIUM"
           onPress={() => handleLevelFilter(2)}
           isChecked={levels.includes(2)}
         />
         <Level
-          title="Difícil"
+          title="Hard"
           type="HARD"
           onPress={() => handleLevelFilter(3)}
           isChecked={levels.includes(3)}
