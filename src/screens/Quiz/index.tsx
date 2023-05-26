@@ -57,7 +57,12 @@ export function Quiz() {
   const shakeAnimation = () => {
     shake.value = withSequence(
       withTiming(3, { duration: 400, easing: Easing.bounce }),
-      withTiming(0)
+      withTiming(0, undefined, (finished) => {
+        "worklet";
+        if (finished) {
+          runOnJS(handleNextQuestion)();
+        }
+      })
     );
   };
 
@@ -215,6 +220,8 @@ export function Quiz() {
     };
   });
 
+  const onUnmount = () => setStatusReply(0);
+
   useEffect(() => {
     const quizSelected = QUIZ.filter((item) => item.id === id)[0];
     setQuiz(quizSelected);
@@ -260,6 +267,7 @@ export function Quiz() {
               question={quiz.questions[currentQuestion]}
               alternativeSelected={alternativeSelected}
               setAlternativeSelected={setAlternativeSelected}
+              onUnmount={onUnmount}
             />
           </Animated.View>
         </GestureDetector>
