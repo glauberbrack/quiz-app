@@ -21,7 +21,7 @@
 <br>
 
 ## :book: Description
-Using Node.js, this project was built to training about js concepts, tests and how to use a beauty terminal application 😝
+Using React Native via Expo, this project was made to study some animations and feedbacks on mobile applications. 😝
 
 ## :rocket: Technologies
 
