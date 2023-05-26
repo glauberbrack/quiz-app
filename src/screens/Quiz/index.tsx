@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Alert, Text, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import { Audio } from "expo-av";
 
 import { useNavigation, useRoute } from "@react-navigation/native";
 
@@ -49,6 +50,16 @@ export function Quiz() {
   );
 
   const [statusReply, setStatusReply] = useState(0);
+
+  const playSound = async (isCorrect: boolean) => {
+    const file = isCorrect
+      ? require("../../assets/correct.mp3")
+      : require("../../assets/wrong.mp3");
+    const { sound } = await Audio.Sound.createAsync(file, { shouldPlay: true });
+
+    await sound.setPositionAsync(0);
+    await sound.playAsync();
+  };
 
   const shake = useSharedValue(0);
   const scrollScreenY = useSharedValue(0);
@@ -121,11 +132,13 @@ export function Quiz() {
     }
 
     if (quiz.questions[currentQuestion].correct === alternativeSelected) {
-      setStatusReply(1);
       setPoints((prevState) => prevState + 1);
+      await playSound(true);
+      setStatusReply(1);
       setAlternativeSelected(null);
       handleNextQuestion();
     } else {
+      await playSound(false);
       setStatusReply(2);
       shakeAnimation();
     }
