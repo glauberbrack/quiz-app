@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Alert, Text, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { Audio } from "expo-av";
+import * as Haptics from "expo-haptics";
 
 import { useNavigation, useRoute } from "@react-navigation/native";
 
@@ -65,7 +66,8 @@ export function Quiz() {
   const scrollScreenY = useSharedValue(0);
   const cardPosition = useSharedValue(0);
 
-  const shakeAnimation = () => {
+  const shakeAnimation = async () => {
+    await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
     shake.value = withSequence(
       withTiming(3, { duration: 400, easing: Easing.bounce }),
       withTiming(0, undefined, (finished) => {
