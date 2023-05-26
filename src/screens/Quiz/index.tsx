@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Alert, Text, View } from "react-native";
+import { Alert, BackHandler, Text, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { Audio } from "expo-av";
 import * as Haptics from "expo-haptics";
@@ -241,6 +241,15 @@ export function Quiz() {
     const quizSelected = QUIZ.filter((item) => item.id === id)[0];
     setQuiz(quizSelected);
     setIsLoading(false);
+  }, []);
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      handleStop
+    );
+
+    return () => backHandler.remove();
   }, []);
 
   if (isLoading) {
